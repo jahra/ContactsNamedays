@@ -20,6 +20,7 @@ using Google.Contacts;
 using Google.GData.Contacts;
 using Google.GData.Client;
 using Google.GData.Extensions;
+using System.Data;
 
 namespace ContactsNamedays
 {
@@ -34,7 +35,7 @@ namespace ContactsNamedays
 
         UserCredential credential;
 
-        public void start()
+        public GoogleConnection()
         {
 
             using (var stream =
@@ -54,7 +55,7 @@ namespace ContactsNamedays
             }
         }
 
-        public void calendar() { 
+        public void Calendar() { 
             // Create Google Calendar API service.
             var service = new CalendarService(new BaseClientService.Initializer()
             {
@@ -93,25 +94,25 @@ namespace ContactsNamedays
 
         }
 
-        public void loadcontacts()
+        public DataTable GetContactsNames()
         {
             OAuth2Parameters parameters = new OAuth2Parameters();
             parameters.AccessToken = credential.Token.AccessToken;
             parameters.RefreshToken = credential.Token.RefreshToken;
 
             RequestSettings settings = new RequestSettings(ApplicationName, parameters);
+            ContactsRequest cr = new ContactsRequest(settings);            
+        
+            Nameday nday = new Nameday();
+            DataTable dataTable = new DataTable();
 
-            // Add authorization token.
-            // ...
-            ContactsRequest cr = new ContactsRequest(settings);
-            PrintAllContacts(cr);
+            DataColumn dataCol = dataTable.Columns.Add("Jmeno", typeof(string));
+            dataCol.AllowDBNull = false;
+            dataCol.Unique = true;
 
+            dataCol =  dataTable.Columns.Add("Datum", typeof(string));
+            dataCol.ReadOnly = true;
 
-        }
-
-        public HashSet<string> PrintAllContacts(ContactsRequest cr)
-        {
-            HashSet<string> contacts = new HashSet<string>();
             Feed<Contact> f = cr.GetContacts();
             foreach (Contact entry in f.Entries)
             {
@@ -121,7 +122,7 @@ namespace ContactsNamedays
                     if (!string.IsNullOrEmpty(name.GivenName))
                     {
                         Console.WriteLine("\t\t" + name.GivenName);
-                        contacts.Add(name.GivenName.ToString());
+                        dataTable.Rows.Add(new Object[] { name.GivenName, nday.GetDate(name.GivenName)});                        
                     }
                     else
                         Console.WriteLine("\t\t (no given name found)");                                        
@@ -129,7 +130,7 @@ namespace ContactsNamedays
                 else
                     Console.WriteLine("\t (no name found)");                
             }
-            return contacts;
+            return dataTable;
         }
 
 

@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid>
-        <Label x:Name="label" Content="" HorizontalAlignment="Left" Height="25" Margin="185,10,0,0" VerticalAlignment="Top" Width="133"/>
+        <Label x:Name="label" Content="" HorizontalAlignment="Left" Height="25" Margin="185,10,0,0" VerticalAlignment="Top" Width="133" BorderThickness="0"/>
         <TextBox x:Name="input" HorizontalAlignment="Left" Height="25" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" ToolTip="Zadej jmeno" TextChanged="input_TextChanged"/>
-        <DataGrid x:Name="table" Margin="0,50,0,0" IsSynchronizedWithCurrentItem="False" AlternationCount="-3"/>
         <Button x:Name="button" Content="Add" HorizontalAlignment="Left" Height="23" Margin="333,12,0,0" VerticalAlignment="Top" Width="86" Click="button_Click"/>
+        <DataGrid x:Name="dataGrid" Margin="0,50,0,0" ItemsSource="{Binding }" SelectionChanged="dataGrid_SelectionChanged"/>
     </Grid>
 </Window>

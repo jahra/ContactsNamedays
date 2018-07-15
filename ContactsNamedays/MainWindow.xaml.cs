@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,14 +21,38 @@ namespace ContactsNamedays
     /// </summary>
     public partial class MainWindow : Window
     {
-        Nameday nday = new Nameday();
+        Nameday nday;
+        GoogleConnection gc;
+        public DataTable data;
+        
 
         public MainWindow()
         {
             InitializeComponent();
-            GoogleConnection gc = new GoogleConnection();
-            gc.start();
+            nday = new Nameday();
+            gc = new GoogleConnection();
+            data = gc.GetContactsNames();
+            dataGrid.DataContext = data.DefaultView;
 
+            dataGrid.CellEditEnding += DataGrid_CellEditEnding;
+        }
+
+        private void DataGrid_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e)
+        {
+            if (e.EditAction == DataGridEditAction.Commit)
+            {
+               
+                //string s = (dataGrid.Items[0] as DataRowView).Row.ItemArray[0].ToString();
+
+
+
+
+
+
+
+
+            }
+            throw new NotImplementedException();
         }
 
         private void input_TextChanged(object sender, TextChangedEventArgs e)
@@ -41,6 +66,11 @@ namespace ContactsNamedays
             {
                 //pridat do tabulky//datatable//datagrid
             }
+        }
+
+        private void dataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
         }
     }
 }
